@@ -1,0 +1,66 @@
+---
+- name:  Install required packages
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - openjdk-7-jre
+    - mysql-server
+    - python-mysqldb
+    - unzip
+
+- name: Fetch openhim release
+  get_url: url=https://github.com/jembi/openhim/releases/download/v{{ openhim_version }}/openhim-{{ openhim_version }}.zip dest=/opt/openhim-{{ openhim_version }}.zip
+
+- name: Extract openhim to /opt/openhim
+  command: creates=/opt/openhim unzip /opt/openhim-{{ openhim_version }}.zip -d /opt/openhim
+
+- name: Set mysql root password
+  mysql_user: check_implicit_admin=yes login_user=root login_password={{ mysql_root_password }} name=root password={{ mysql_root_password }} state=present
+
+- name: create db
+  mysql_db: db=interoperability_layer login_user=root login_password={{ mysql_root_password }} state=present
+
+- name: Modify file for import
+  lineinfile: dest=/opt/openhim/classes/create_database.sql regexp="create database*" state=absent
+
+- name: Import test db
+  mysql_db: db=interoperability_layer login_user=root login_password={{ mysql_root_password }} state=import target=/opt/openhim/classes/create_database.sql
+
+- name: Apply database updates
+  mysql_db: name=interoperability_layer login_user=root login_password={{ mysql_root_password }} target={{ item }} state=import
+  with_items:
+   - /opt/openhim/classes/update_database_1.sql
+   - /opt/openhim/classes/update_database_2.sql
+
+- name: create mysql himuser
+  mysql_user: name=himuser password={{ himuser_password }} login_user=root login_password={{ mysql_root_password }} state=present priv=interoperability_layer.*:ALL
+
+- name: backup /etc/hosts
+  command: cp /etc/hosts /etc/hosts.openhim.bak
+
+- name: Insert temporary /etc/hosts
+  copy: src=hosts-ldap dest=/etc/hosts
+
+- name: Install openldap
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items:
+    - slapd
+    - ldap-utils
+
+- name: Restore /etc/hosts
+  command: mv /etc/hosts.openhim.bak /etc/hosts
+
+- name: Copy ldif to import
+  template: src=ldap-auth-pre-prod.ldif dest=/opt/openhim/classes/ldap-auth-pre-prod.ldif 
+
+- name: Import ldif 
+  command: ldapadd -c -x -D {{ openldap_root_dn }} -w {{ ldap_pass }} -f /opt/openhim/classes/ldap-auth-pre-prod.ldif
+
+- name: Fetch Mule
+  get_url: url=http://dist.codehaus.org/mule/distributions/mule-standalone-3.4.0.tar.gz dest=/tmp
+
+- name: Extract Mule
+  command: chdir=/opt tar xzf /tmp/mule-standalone-3.4.0.tar.gz -C /opt  
+  
+- name: Deploy openhim
+  command: creates=/opt/mule-standalone-3.4.0/apps cp /opt/openhim-{{ openhim_version }}.zip /opt/mule-standalone-3.4.0/apps/
+

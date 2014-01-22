@@ -1,0 +1,9 @@
+---
+- name: Setup server
+  hosts: servers
+  user: root
+#  sudo: True
+
+  roles:
+#    - bootstrap
+    - openhim
