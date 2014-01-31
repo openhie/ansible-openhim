@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Confluence Linux service controller script
+cd "/opt/openhim-webui/openhim-webui"
+
+case "$1" in
+    start)
+        su webui -c "python errorui.py > /dev/null 2>&1&"
+        ;;
+    stop)
+        pgrep -u webui python | xargs kill > /dev/null 2>&1
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac

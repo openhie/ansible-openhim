@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# OpenHIM controller script
+cd "/opt/mule-standalone-3.4.0/bin"
+
+case "$1" in
+    start)
+        ./mule start
+        ;;
+    stop)
+        ./mule stop
+        ;;
+    status)
+	 ./mule status
+	;;
+    restart)
+        ./mule stop
+        sleep 5
+        ./mule start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
