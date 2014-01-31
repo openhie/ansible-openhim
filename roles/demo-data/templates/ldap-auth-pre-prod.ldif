@@ -11,7 +11,7 @@ dn: cn=admin,dc=moh,dc=gov,dc=rw
 objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: admin
-userPassword: {{ openldap_rootpw }} 
+userPassword: {{ root_password }} 
 description: LDAP administrator
 
 dn: ou=himusers,dc=moh,dc=gov,dc=rw

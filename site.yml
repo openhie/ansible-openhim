@@ -7,3 +7,4 @@
   roles:
 #    - bootstrap
     - openhim
+    - demo-data

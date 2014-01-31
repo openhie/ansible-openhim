@@ -4,9 +4,7 @@ openhim_version: 2.1.0
 # Database Passwords
 mysql_root_password: password
 himuser_password: password
-
-openldap_base_dn: "dc=moh,dc=gov,dc=rw"
+domain_name: "moh.gov.rw"
+openldap_serverdomain_name: "dc=moh,dc=gov,dc=rw"
 openldap_root_dn: "cn=admin,dc=moh,dc=gov,dc=rw"
-# use the slappasswd utility to generate
-openldap_rootpw: "{SSHA}abc123"
 ldap_pass: password

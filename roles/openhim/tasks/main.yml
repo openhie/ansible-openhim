@@ -49,11 +49,21 @@
 - name: Restore /etc/hosts
   command: mv /etc/hosts.openhim.bak /etc/hosts
 
-- name: Copy ldif to import
-  template: src=ldap-auth-pre-prod.ldif dest=/opt/openhim/classes/ldap-auth-pre-prod.ldif 
+- name: Delete the configuration directory
+  file: path=/etc/ldap/slapd.d state=absent
 
-- name: Import ldif 
-  command: ldapadd -c -x -D {{ openldap_root_dn }} -w {{ ldap_pass }} -f /opt/openhim/classes/ldap-auth-pre-prod.ldif
+- name: Create new ldap directory
+  file: dest=/var/lib/ldap/{{ domain_name }} state=directory owner=openldap group=openldap
+
+- name: Generate the root password for ldap
+  shell: slappasswd -s {{ ldap_pass }} 
+  register: root_password
+
+- name: Copy slapd.conf
+  template: src=slapd.conf dest=/etc/ldap/slapd.conf owner=openldap group=openldap
+
+- name: Restart slapd
+  service: name=slapd state=restarted
 
 - name: Fetch Mule
   get_url: url=http://dist.codehaus.org/mule/distributions/mule-standalone-3.4.0.tar.gz dest=/tmp
@@ -61,6 +71,9 @@
 - name: Extract Mule
   command: chdir=/opt tar xzf /tmp/mule-standalone-3.4.0.tar.gz -C /opt  
   
+- name: Insert openhim init script
+  template: src=openhim.j2 dest=/etc/init.d/openhim mode=0755 owner=root group=root
+
 - name: Deploy openhim
-  command: creates=/opt/mule-standalone-3.4.0/apps cp /opt/openhim-{{ openhim_version }}.zip /opt/mule-standalone-3.4.0/apps/
+  command: cp /opt/openhim-{{ openhim_version }}.zip /opt/mule-standalone-3.4.0/apps/
 
