@@ -90,10 +90,10 @@
   command: cp /opt/openhim-{{ openhim_version }}.zip /opt/mule-standalone-3.4.0/apps/
 
 - name: Deploy openhim-encounter
-  get_url: url=https://github.com/jembi/openhim-encounter-orchestrator/releases/download/v{{ encounter_version }}/openhim-encounter-mediator-{{ encounter_version }}.zip dest=/opt/mule-standalone-3.4.0/apps
+  get_url: url=https://github.com/jembi/openhim-encounter-orchestrator/releases/download/v{{ encounter_version }}/openhim-encounter-mediator-{{ encounter_version }}.zip dest=/opt/mule-standalone-3.4.0/apps/openhim-encounter-mediator-{{ encounter_version }}.zip
 
 - name: Deploy openhim-patient
-  get_url: url=https://github.com/jembi/openhim-openempi-patient-adapter/releases/download/v{{ patient_version }}/openhim-openempi-patient-adapter-{{ patient_version }}.zip
+  get_url: url=https://github.com/jembi/openhim-openempi-patient-adapter/releases/download/v{{ patient_version }}/openhim-openempi-patient-adapter-{{ patient_version }}.zip dest=/opt/mule-standalone-3.4.0/apps/openhim-openempi-patient-adapter-{{ patient_version }}.zip
 
 - name: Start and enable openhim at boot
   service: name=openhim state=started enabled=yes
