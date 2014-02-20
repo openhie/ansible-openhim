@@ -14,7 +14,7 @@ Ansible playbook for deploying the interoperability layer component of the [Open
 * **If you do not having the required python packages uncomment the `# - bootstrap` line in the `site.yml` file.**
 
 ## Vars and setup
-You will need to copy `group_vars/all.example` to `group_vars/all` then edit the variables in`group_vars/all`.
+You will need to copy `group_vars/all.example` to `group_vars/all` then edit the variables in`group_vars/all`.  You may want to change the config files in roles/openhim/templates to suit your environment as well.
 
 Also copy `hosts.example` to `hosts` and enter the ip or hostname of your server in place of the ip.
 
