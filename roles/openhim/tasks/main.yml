@@ -60,7 +60,7 @@
   register: root_password
 
 - name: Copy slapd.conf
-  template: src=slapd.conf dest=/etc/ldap/slapd.conf owner=openldap group=openldap
+  template: src=slapd.conf.j2 dest=/etc/ldap/slapd.conf owner=openldap group=openldap
 
 - name: Restart slapd
   service: name=slapd state=restarted
@@ -70,6 +70,18 @@
 
 - name: Extract Mule
   command: chdir=/opt tar xzf /tmp/mule-standalone-3.4.0.tar.gz -C /opt  
+
+- name: Insert openhim config HIM-core
+  template: src=HIM-core.properties.j2 dest=/opt/mule-standalone-3.4.0/conf/HIM-core.properties
+
+- name: Insert openhim config defaultchannel-mapping
+  template: src=defaultchannel-mapping.json.j2 dest=/opt/mule-standalone-3.4.0/conf/defaultchannel-mapping.json
+
+- name: Insert openhim config patientMediator
+  template: src=patientMediator.properties.j2 dest=/opt/mule-standalone-3.4.0/conf/patientMediator.properties
+
+- name: Insert openhim config encounter-mediator
+  template: src=encounter-mediator.properties.j2 dest=/opt/mule-standalone-3.4.0/conf/encounter-mediator.properties
   
 - name: Insert openhim init script
   template: src=openhim.j2 dest=/etc/init.d/openhim mode=0755 owner=root group=root
@@ -77,3 +89,5 @@
 - name: Deploy openhim
   command: cp /opt/openhim-{{ openhim_version }}.zip /opt/mule-standalone-3.4.0/apps/
 
+- name: Start and enable openhim at boot
+  service: name=openhim state=started enabled=yes

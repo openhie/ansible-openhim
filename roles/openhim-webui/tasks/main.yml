@@ -48,3 +48,6 @@
 - name: insert openhim-webui init script
   template: src=openhim-webui.j2 dest=/etc/init.d/openhim-webui mode=0755
   notify: restart openhim
+
+- name: start openhim-webui and enable at boot
+  service: name=openhim-webui state=started enabled=yes
