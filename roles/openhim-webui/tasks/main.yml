@@ -12,6 +12,7 @@
    - python-dev
    - python-pip
    - git
+   - build-essential
 
 - name: Install packges with pip
   pip: name={{ item }} state=present 
