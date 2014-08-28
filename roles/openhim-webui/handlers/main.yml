@@ -1,6 +1,0 @@
----
-- name: restart openhim
-  service: name=openhim state=restarted enabled=yes
-
-- name: restart openhim-webui
-  service: name=openhim state=restarted enabled=yes

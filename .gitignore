@@ -1,6 +1,5 @@
-hosts
-group_vars/all
-
+files/deploy/*
+!files/deploy/.gitkeep
 ## OSX
 .DS_Store
 .AppleDouble

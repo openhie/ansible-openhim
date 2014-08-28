@@ -1,0 +1,18 @@
+---
+# Defaults for OpenHIM core
+openhim_dir: "/opt/openempi"
+# Can deploy from a local tar.gz in files/deploy if set to true.
+openhim_deploy_local: false
+openhim_user: "openhim"
+
+
+# Defaults for nodejs install
+node_arch: "x64"
+nodejs_version: "0.11.13"
+nodejs_version_tag: "v{{nodejs_version}}"
+nodejs_file_tag: "node-{{nodejs_version_tag}}"
+nodejs_file_name: "{{nodejs_file_tag}}-linux-{{node_arch}}.tar.gz"
+nodejs_base_url: "http://nodejs.org/dist/v{{nodejs_version}}/"
+nodejs_tarball_url: "{{nodejs_base_url}}{{nodejs_file_name}}"
+nodejs_shasum_url: "{{nodejs_base_url}}SHASUMS.txt"
+nodejs_path: "/usr/local"

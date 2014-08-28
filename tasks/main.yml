@@ -1,0 +1,66 @@
+---
+# Include OS specfic stuff
+
+- name: Add OS specfic vars
+  include_vars: "{{ansible_os_family}}.yml"
+
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: RedHat.yml
+  when: ansible_os_family == "RedHat"
+
+# Install Node
+- include: node.yml
+
+# Create openhim user
+- name: Create user to run openhim
+  user: name={{openhim_user}}
+        state=present
+
+# Install OpenHIM Core
+- name: Deploy local copy of OpenHIM Core
+  unarchive: copy=yes
+             creates={{openhim_dir}}
+             dest={{openhim_dir}}
+             src={{item}}
+  with_fileglob:
+   - deploy/*
+  when: openhim_deploy_local
+
+- name: Deploy latest OpenHIM from Github
+  git: repo=https://github.com/jembi/openhim-core-js
+       dest={{openhim_dir}}
+  when: not openhim_deploy_local
+
+- name: Install dependencies with npm
+  npm: path={{openhim_dir}}
+
+- name: Install cake with npm
+  npm: name=coffee-script
+       state=present
+       global=yes
+
+- name: Build openhim with cake
+  shell: cake build chdir={{openhim_dir}}
+
+- name: Ensure openhim directory has correct permissions
+  file: path={{openhim_dir}}
+        group={{openhim_user}}
+        owner={{openhim_user}}
+        recurse=yes
+        state=directory
+
+- name: Insert init startup script
+  template: src=openhim.j2
+            dest=/etc/init.d/openhim
+            mode=0755
+  when: ansible_os_family == "Debian"
+
+- name: Enable OpenHIM Core service
+  service: name=openhim state=started enabled=yes
+
+# Configure OpenHIM Admin UI
+
+
+
