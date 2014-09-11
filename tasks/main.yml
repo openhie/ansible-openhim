@@ -25,7 +25,6 @@
 # Install OpenHIM Core
 - name: Deploy local copy of OpenHIM Core
   unarchive: copy=yes
-             creates={{openhim_dir}}
              dest={{openhim_dir}}
              src={{openhim_archive_loc}}
   when: openhim_deploy_local
