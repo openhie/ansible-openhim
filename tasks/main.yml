@@ -36,12 +36,13 @@
 
 - name: Install dependencies with npm
   npm: path={{openhim_dir}}
-  when: openhim_deploy_local == false
+       executable={{nodejs_path}}/bin/npm
 
 - name: Install cake with npm
   npm: name=coffee-script
        state=present
        global=yes
+       executable={{nodejs_path}}/bin/npm
 
 - name: Build openhim with cake
   shell: cake build chdir={{openhim_dir}}
