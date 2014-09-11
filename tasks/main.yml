@@ -23,9 +23,7 @@
   unarchive: copy=yes
              creates={{openhim_dir}}
              dest={{openhim_dir}}
-             src={{item}}
-  with_fileglob:
-   - deploy/*
+             src={{openhim_archive_loc}}
   when: openhim_deploy_local
 
 - name: Deploy latest OpenHIM from Github
