@@ -18,6 +18,10 @@
   user: name={{openhim_user}}
         state=present
 
+- name: Create {{openhim_dir}}
+  file: path={{openhim_dir}}
+        state=directory
+
 # Install OpenHIM Core
 - name: Deploy local copy of OpenHIM Core
   unarchive: copy=yes

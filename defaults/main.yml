@@ -1,6 +1,6 @@
 ---
 # Defaults for OpenHIM core
-openhim_dir: "/opt/openempi"
+openhim_dir: "/opt/openhim"
 # Can deploy from a local tar.gz in files/deploy if set to true.
 openhim_deploy_local: false
 # Location of archive to deploy if above is set to true
