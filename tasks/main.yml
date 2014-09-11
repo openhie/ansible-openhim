@@ -27,6 +27,9 @@
         state=directory
 
 # Install OpenHIM Core
+- include: deploy.yml
+  when: openhim_deploy_local
+
 - name: Deploy latest OpenHIM from Github
   git: repo=https://github.com/jembi/openhim-core-js
        dest={{openhim_dir}}
