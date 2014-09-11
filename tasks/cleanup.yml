@@ -1,0 +1,8 @@
+- name: Stop openhim service
+  service: name=openhim state=stopped
+  ignore_errors: yes
+
+- name: Remove install dir
+  file: path={{openhim_dir}}
+        state=absent
+

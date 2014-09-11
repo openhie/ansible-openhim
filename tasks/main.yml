@@ -4,6 +4,10 @@
 - name: Add OS specfic vars
   include_vars: "{{ansible_os_family}}.yml"
 
+# Cleanup if (re)deploying
+- include: cleanup.yml
+  when: openhim_deploy_local
+
 - include: Debian.yml
   when: ansible_os_family == "Debian"
 
@@ -23,12 +27,6 @@
         state=directory
 
 # Install OpenHIM Core
-- name: Deploy local copy of OpenHIM Core
-  unarchive: copy=yes
-             dest={{openhim_dir}}
-             src={{openhim_archive_loc}}
-  when: openhim_deploy_local
-
 - name: Deploy latest OpenHIM from Github
   git: repo=https://github.com/jembi/openhim-core-js
        dest={{openhim_dir}}
@@ -44,6 +42,7 @@
        global=yes
        executable={{nodejs_path}}/bin/npm
 
+# Note: This will require node to be in the $PATH
 - name: Build openhim with cake
   shell: "{{nodejs_path}}/bin/cake build chdir={{openhim_dir}}"
 

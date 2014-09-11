@@ -1,0 +1,4 @@
+- name: Deploy local copy of OpenHIM Core
+  unarchive: copy=yes
+             dest={{openhim_dir}}
+             src={{openhim_archive_loc}}
