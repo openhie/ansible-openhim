@@ -45,7 +45,7 @@
        executable={{nodejs_path}}/bin/npm
 
 - name: Build openhim with cake
-  shell: {{nodejs_path}}/bin/cake build chdir={{openhim_dir}}
+  shell: "{{nodejs_path}}/bin/cake build chdir={{openhim_dir}}"
 
 - name: Ensure openhim directory has correct permissions
   file: path={{openhim_dir}}
