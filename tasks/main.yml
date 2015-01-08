@@ -30,24 +30,19 @@
 - include: deploy.yml
   when: openhim_deploy_local
 
-- name: Deploy latest OpenHIM from Github
-  git: repo=https://github.com/jembi/openhim-core-js
-       dest={{openhim_dir}}
-  when: not openhim_deploy_local
-
 - name: Install dependencies with npm
   npm: path={{openhim_dir}}
        executable={{nodejs_path}}/bin/npm
 
-- name: Install cake with npm
-  npm: name=coffee-script
+- name: Install grunt with npm
+  npm: name=grunt
        state=present
        global=yes
        executable={{nodejs_path}}/bin/npm
 
 # Note: This will require node to be in the $PATH
-- name: Build openhim with cake
-  shell: "{{nodejs_path}}/bin/cake build chdir={{openhim_dir}}"
+- name: Build openhim with grunt
+  shell: "{{nodejs_path}}/bin/grunt build chdir={{openhim_dir}}"
 
 - name: Ensure openhim directory has correct permissions
   file: path={{openhim_dir}}
