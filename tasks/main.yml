@@ -35,7 +35,7 @@
        executable={{nodejs_path}}/bin/npm
 
 - name: Install grunt with npm
-  npm: name=grunt
+  npm: name=grunt-cli
        state=present
        global=yes
        executable={{nodejs_path}}/bin/npm
