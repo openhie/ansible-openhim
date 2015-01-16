@@ -1,0 +1,20 @@
+- name: Install openhim from git
+  git: dest={{openhim_dir}}
+       repo=https://github.com/jembi/openhim-core-js.git
+       version={{openhim_git_branch}}
+  when: openhim_git_branch is defined
+
+- name: Download openhim {{openhim_version}}
+  get_url: dest=/tmp/openhim.tar.gz
+           url=https://github.com/jembi/openhim-core-js/archive/v{{openhim_version}}.tar.gz
+  when: openhim_git_branch is not defined and openhim_version
+
+- name: Extract openhim {{openhim_version}}
+  unarchive: copy=no
+             dest=/tmp
+             src=/tmp/openhim.tar.gz
+  when: openhim_git_branch is not defined and openhim_version
+
+- name: Move openhim {{openhim_version}} to {{openhim_dir}}
+  shell: "rsync -rv /tmp/openhim-core-js-{{openhim_version}}/* {{openhim_dir}}/ && rm -r /tmp/openhim-core-js-{{openhim_version}}"
+  when: openhim_git_branch is not defined and openhim_version

@@ -14,5 +14,6 @@
     - mongodb
     - git
     - build-essential
+    - openjdk-7-jre-headless
 
 

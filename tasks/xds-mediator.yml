@@ -1,0 +1,5 @@
+# This should come from the official repo when released.
+- name: Download xds-mediator zip
+  get_url: url={{openhim_xds_url}}
+           dest="{{openhim_mule_dir}}/mule-standalone-{{openhim_mule_version}}/apps/openhie-xds-mediator.zip"
+           

@@ -6,3 +6,4 @@
     - curl
     - gcc-c++
     - gcc
+    - java-1.7.0-openjdk

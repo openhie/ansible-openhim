@@ -30,11 +30,20 @@
 - include: deploy.yml
   when: openhim_deploy_local
 
+- include: install.yml
+  when: not openhim_deploy_local
+
 - name: Install dependencies with npm
   npm: path={{openhim_dir}}
        executable={{nodejs_path}}/bin/npm
 
-- name: Install grunt with npm
+- name: Install grunt with npm (local)
+  npm: name=grunt
+       state=present
+       path={{openhim_dir}}
+       executable={{nodejs_path}}/bin/npm
+
+- name: Install grunt with npm (global)
   npm: name=grunt-cli
        state=present
        global=yes
@@ -44,21 +53,46 @@
 - name: Build openhim with grunt
   shell: "{{nodejs_path}}/bin/grunt build chdir={{openhim_dir}}"
 
-- name: Ensure openhim directory has correct permissions
-  file: path={{openhim_dir}}
+# Install Openhim-xds-mediator
+
+- name: Download Mule Standalone
+  get_url: url={{openhim_mule_url}}
+           dest=/tmp/mule.tar.gz
+
+- name: Extract mule to {{openhim_mule_dir}}
+  unarchive: copy=no
+             dest={{openhim_mule_dir}}
+             src=/tmp/mule.tar.gz
+
+# Install xds-mediator
+- include: xds-mediator.yml
+  when: not openhim_deploy_local
+
+- name: Ensure openhim directories have correct permissions
+  file: path={{item}}
         group={{openhim_user}}
         owner={{openhim_user}}
         recurse=yes
         state=directory
+  with_items:
+   - "{{openhim_dir}}"
+   - "{{openhim_mule_dir}}/mule-standalone-{{openhim_mule_version}}"
 
-- name: Insert init startup script
-  template: src=openhim.j2
-            dest=/etc/init.d/openhim
+- name: Insert init startup scripts
+  template: src={{item.src}}
+            dest=/etc/init.d/{{item.dest}}
             mode=0755
+  with_items:
+    - { src: openhim.j2, dest: openhim }
+    - { src: mule.j2, dest: mule }
   when: ansible_os_family == "Debian"
 
-- name: Enable OpenHIM Core service
-  service: name=openhim state=started enabled=yes
+- name: Enable OpenHIM Core services
+  service: name={{item}} state=started enabled=yes
+  with_items:
+    - openhim
+    - mule
+  when: ansible_os_family == "Debian"
 
 # Configure OpenHIM Admin UI
 
