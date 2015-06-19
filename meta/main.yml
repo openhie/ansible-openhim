@@ -12,10 +12,6 @@ galaxy_info:
     - raring
     - saucy
     - trusty
-  - name: Debian
-    versions:
-    - squeeze
-    - wheezy
   categories:
   - development
   - web

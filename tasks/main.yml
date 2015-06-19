@@ -1,30 +1,26 @@
 ---
-# Cleanup if (re)deploying
-- include: cleanup.yml
-  when: openhim_deploy_local
-
 - include: Debian.yml
   when: ansible_os_family == "Debian"
 
-# Install OpenHIM Core
-- include: deploy.yml
-  when: openhim_deploy_local
-
-## Install openhim-core via npm if not installing from source or deploy
 - name: Install openhim-core from npm
   npm: name=openhim-core
        global=yes
        state=present
-  when: not openhim_deploy_local
 
-# Install Openhim-xds-mediator
-- include: xds-mediator.yml
-  when: openhim_xds_mediator_install
+- name: Install openhim-core upstart job
+  template: src=openhim-core.conf.j2
+            dest=/etc/init/openhim-core.conf
+            mode=0644
+            owner=root
+            group=root
+  when: ansible_distribution == "Ubuntu"
 
 - name: Enable OpenHIM Core services
   service: name={{item}} state=started enabled=yes
   with_items:
     - openhim-core
-#    - openhim-xds-mediator
-  when: ansible_os_family == "Debian"
+  when: ansible_distribution == "Ubuntu"
 
+# Install Openhim-xds-mediator
+- include: xds-mediator.yml
+  when: openhim_xds_mediator_install

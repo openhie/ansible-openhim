@@ -1,14 +1,5 @@
 ---
 #### Defaults for OpenHIM core
-# These values may be overridden in plays/vars/etc..
-# http://docs.ansible.com/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable
-#
-### OpenHIM Install Options ###
-# Options below are used for deployment of openhim-core from an archive
-openhim_deploy_local: false
-openhim_archive_loc:
-openhim_dir: "/opt/openhim"
-openhim_user: "openhim"
 
 #### Defaults for OpenHIM xds-mediator
 # Install openhim-xds-mediator
@@ -17,3 +8,9 @@ openhim_xds_mediator_install: true
 openhim_xds_version: 1.0.2
 # URL to download xds-mediator (This should change to the offical github repo on release)
 openhim_xds_url: "https://github.com/jembi/openhim-mediator-xds/releases/download/v{{openhim_xds_version}}/openhim-mediator-xds-{{openhim_xds_version}}.tar.gz"
+# User to run as
+openhim_xds_user: openhim_xds
+# Directory to install to
+openhim_xds_dir: /opt/openhim-mediator-xds
+# URL to download xds-mediator config
+openhim_xds_config_url: "https://raw.githubusercontent.com/jembi/openhim-mediator-xds/master/src/main/resources/mediator.properties"

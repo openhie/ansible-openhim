@@ -1,15 +1,49 @@
+- name: Install openjdk-7-jre
+  apt: name=openjdk-7-jre-headless
+       state=present
+       update_cache=yes
+       cache_valid_time=86400
 
+- name: Create user {{openhim_xds_user}}
+  user: name={{openhim_xds_user}}
+        state=present
+        createhome=no
+        comment="OpenHIM XDS user"
+        shell=/bin/nologin
+        system=yes
 
-
-
-
-
-
-- name: Ensure openhim directories have correct permissions
-  file: path={{item}}
-        group={{openhim_user}}
-        owner={{openhim_user}}
-        recurse=yes
+- name: Create openhim-xds-mediator directory
+  file: path={{openhim_xds_dir}}
+        owner=root
+        group=root
+        mode=0755
         state=directory
-  with_items:
-   - "{{openhim_dir}}"
+
+- name: Download openhim-xds-mediator {{openhim_xds_version}}
+  get_url: url={{openhim_xds_url}}
+           dest=/tmp/xds-mediator.tar.gz
+
+- name: Extract openhim-xds-mediator
+  unarchive: copy=no
+             dest={{openhim_xds_dir}}
+             mode=0755
+             owner=root
+             group=root
+             src=/tmp/xds-mediator.tar.gz
+
+- name: Insert openhim-xds-mediator init script
+  template: src=openhim-xds-mediator.j2
+            dest=/etc/init.d/openhim-xds-mediator
+            mode=0755
+            owner=root
+            group=root
+
+# Attempt to accept the localy signed cert from openhim-core
+- name: Add openhim-core slefsigned cert to local store
+  shell: "openssl s_client -connect localhost:8080 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /usr/local/share/ca-certificates/openhim-core.crt; update-ca-certificates"
+  when: ansible_os_family == "Debian"
+
+- name: Enable openhim-xds-mediator service
+  service: name=openhim-xds-mediator
+           state=started
+           enabled=yes
