@@ -39,7 +39,7 @@
             group=root
 
 # Attempt to accept the localy signed cert from openhim-core
-- name: Add openhim-core slefsigned cert to local store
+- name: Add openhim-core self signed cert to local store
   shell: "openssl s_client -connect localhost:8080 < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /usr/local/share/ca-certificates/openhim-core.crt; update-ca-certificates"
   when: ansible_os_family == "Debian"
 
