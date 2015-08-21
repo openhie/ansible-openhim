@@ -1,12 +1,17 @@
 ---
 #### Defaults for OpenHIM core
+## Defaults for default.json config file.
+openhim_bindaddress: "0.0.0.0"
+openhim_router_httpport: "5000"
+openhim_router_httpsport: "5001"
+openhim_api_httpsport: "8080"
 
 #### Defaults for OpenHIM xds-mediator
 # Install openhim-xds-mediator
 openhim_xds_mediator_install: true
 # Version of the xds-mediator to download
 openhim_xds_version: 1.0.2
-# URL to download xds-mediator (This should change to the offical github repo on release)
+# URL to download xds-mediator
 openhim_xds_url: "https://github.com/jembi/openhim-mediator-xds/releases/download/v{{openhim_xds_version}}/openhim-mediator-xds-{{openhim_xds_version}}.tar.gz"
 # User to run as
 openhim_xds_user: openhim_xds
@@ -14,3 +19,4 @@ openhim_xds_user: openhim_xds
 openhim_xds_dir: /opt/openhim-mediator-xds
 # URL to download xds-mediator config
 openhim_xds_config_url: "https://raw.githubusercontent.com/jembi/openhim-mediator-xds/master/src/main/resources/mediator.properties"
+

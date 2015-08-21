@@ -1,0 +1,113 @@
+{
+  "bindAddress": "{{openhim_bindaddress}}",
+  "mongo": {
+    "url": "mongodb://localhost/openhim",
+    "atnaUrl": "mongodb://localhost/openhim"
+  },
+  "logger": {
+    "level": "info"
+  },
+  "router": {
+    "externalHostname": "localhost",
+    "httpPort": {{openhim_router_httpport}},
+    "httpsPort": {{openhim_router_httpsport}},
+    "timeout": 60000
+  },
+  "api": {
+    "enabled" : true,
+    "httpsPort": {{openhim_apt_httpsport}},
+    "authWindowSeconds": 10
+  },
+  "rerun": {
+    "httpPort": 7786,
+    "host": "localhost",
+    "processor": {
+      "enabled": true,
+      "pollPeriodMillis": 2000
+    }
+  },
+  "tcpAdapter": {
+    "httpReceiver": {
+      "httpPort": 7787,
+      "host": "localhost"
+    }
+  },
+  "polling": {
+    "enabled": true,
+    "pollingPort": 7788,
+    "host": "localhost"
+  },
+  "authentication": {
+    "enableMutualTLSAuthentication": true,
+    "enableBasicAuthentication": true
+  },
+  "nodemailer": {
+    "service": "Gmail",
+    "auth": {
+      "user": "user@gmail.com",
+      "pass": "password"
+    }
+  },
+  "smsGateway": {
+    "provider": "clickatell",
+    "config": {
+      "user": "user",
+      "pass": "pass",
+      "apiID": "apiID"
+    }
+  },
+  "alerts": {
+    "enableAlerts": true,
+    "pollPeriodMinutes": 1,
+    "himInstance": "openhim.jembi.org",
+    "consoleURL": "http://openhim.jembi.org"
+  },
+  "reports": {
+    "enableReports": true,
+    "dailyReportAt": "0 7 * * *",
+    "weeklyReportAt": "0 7 * * 1"
+  },
+  "visualizer": {
+    "enableVisualizer": true,
+    "minimumEventPeriodMillis": 100,
+    "enableTSNormalization": true,
+    "orchestrationTSBufferMillis": 100
+  },
+  "statsd": {
+    "enabled": false,
+    "host": "127.0.0.1"
+  },
+  "application": {
+    "name": "Development"
+  },
+  "newUserExpiry": {
+    "duration": 7,
+    "durationType": "days"
+  },
+  "auditing": {
+    "servers": {
+      "udp": {
+        "enabled": false,
+        "port": 5050
+      },
+      "tls": {
+        "enabled": false,
+        "port": 5051
+      },
+      "tcp": {
+        "enabled": false,
+        "port": 5052
+      }
+    }
+  },
+  "caching": {
+    "enabled": true,
+    "refreshMillis": 1000
+  },
+  "tlsClientLookup": {
+    "type": "strict"
+  },
+  "agenda": {
+    "startupDelay": 500
+  }
+}

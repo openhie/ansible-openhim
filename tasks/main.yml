@@ -7,6 +7,10 @@
        global=yes
        state=present
 
+- name: Install openhim-core config
+  template: src=default.json.j2
+            dest=/usr/lib/node_modules/openhim-core/config/default.json
+
 - name: Install openhim-core upstart job
   template: src=openhim-core.conf.j2
             dest=/etc/init/openhim-core.conf
